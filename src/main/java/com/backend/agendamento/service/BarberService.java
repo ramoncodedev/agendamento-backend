@@ -28,4 +28,21 @@ public class BarberService {
 
         return barbers;
     }
+
+    public  List<Barber> findByName(String name){
+            List<Barber> findBarber = barberRepository.findByNameContainingIgnoreCase(name);
+
+            if (findBarber.isEmpty()){
+                throw new NoBarbersAvailableException("There is no barber with that name.");
+            }
+
+            return findBarber;
+    }
+
+    public void deleteBarber(Long id){
+        Barber barber = barberRepository.findById(id)
+                .orElseThrow(()-> new NoBarbersAvailableException("There is no barber with that id."));
+
+        barberRepository.deleteById(id);
+    }
 }
