@@ -3,6 +3,7 @@ package com.backend.agendamento.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 
 import java.time.LocalDateTime;
@@ -31,5 +32,6 @@ public class Customer {
     @Column(nullable = false)
     private String email;
 
+    @CreationTimestamp
     private LocalDateTime createdAt = LocalDateTime.now();
 }
