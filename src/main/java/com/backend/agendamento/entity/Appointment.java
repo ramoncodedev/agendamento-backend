@@ -1,9 +1,17 @@
 package com.backend.agendamento.entity;
 
 import jakarta.persistence.*;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@Entity
+@Table(name = "appointment")
 public class Appointment {
 
 
