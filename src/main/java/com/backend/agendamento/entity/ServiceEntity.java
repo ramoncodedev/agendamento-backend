@@ -58,6 +58,7 @@ public class ServiceEntity {
     /**
      * Flag para controlar se o serviço está ativo ou inativo
      */
+    @Builder.Default
     @Column(nullable = false)
     private Boolean active = true;
 
