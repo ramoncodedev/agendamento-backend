@@ -9,10 +9,9 @@ import com.backend.agendamento.service.CustomerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -28,5 +27,14 @@ public class CustomerController {
         Customer save = customerService.saveCustomer(customer);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(CustomerMapper.toDtoResponse(save));
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<CustomerResponse>> findAllCustomes(){
+        List<Customer> customerList = customerService.findAll();
+        List<CustomerResponse> responses = customerList.stream()
+                .map(customer -> CustomerMapper.toDtoResponse(customer)).toList();
+
+        return ResponseEntity.ok().body(responses);
     }
 }
