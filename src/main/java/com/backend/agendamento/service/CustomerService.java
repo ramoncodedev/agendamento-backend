@@ -1,13 +1,14 @@
 package com.backend.agendamento.service;
 
-import com.backend.agendamento.DTOs.mapper.CustomerMapper;
-import com.backend.agendamento.DTOs.request.CustomerRequest;
-import com.backend.agendamento.DTOs.response.CustomerResponse;
+
 import com.backend.agendamento.entity.Customer;
 import com.backend.agendamento.exception.ConflictException;
+import com.backend.agendamento.exception.NoCustomersAvailableException;
 import com.backend.agendamento.repository.CustomerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -25,7 +26,6 @@ public class CustomerService {
 
     }
 
-
     public void verifyByemail(String email){
         if (existsEmail(email)){
             throw new ConflictException("This email address is not available.");
@@ -34,6 +34,16 @@ public class CustomerService {
 
     public boolean existsEmail(String email){
         return customerRepository.existsByEmail(email);
+    }
+
+    public List<Customer> findAll(){
+        List<Customer> customers = customerRepository.findAll();
+
+        if (customers.isEmpty()){
+            throw new NoCustomersAvailableException("Não há clientes disponíveis.");
+        }
+
+        return customers;
     }
 
 
