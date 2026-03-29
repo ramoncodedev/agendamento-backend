@@ -57,17 +57,17 @@ public class BarberSchedule {
      * Dia da semana (1 = Segunda, 2 = Terça, ..., 6 = Sábado, 7 = Domingo)
      * Conforme padrão DayOfWeek do Java (MONDAY=1, SUNDAY=7)
      */
-    @NotNull(message = "Weekday is required")
+    @NotNull(message = "O dia da semana é obrigatório\n")
     @Min(value = 1, message = "Weekday must be between 1 (Monday) and 7 (Sunday)")
     @Max(value = 7, message = "Weekday must be between 1 (Monday) and 7 (Sunday)")
     @Column(nullable = false)
     private Integer weekday;
 
-    @NotNull(message = "Start time is required")
+    @NotNull(message = "O horário de início é obrigatório.")
     @Column(nullable = false)
     private LocalTime startTime;
 
-    @NotNull(message = "End time is required")
+    @NotNull(message = "O horário de término é obrigatório")
     @Column(nullable = false)
     private LocalTime endTime;
 
@@ -93,7 +93,7 @@ public class BarberSchedule {
         if (startTime != null && endTime != null) {
             if (endTime.isBefore(startTime) || endTime.equals(startTime)) {
                 throw new IllegalArgumentException(
-                    "End time must be after start time"
+                    "O horário de término deve ser posterior ao horário de início."
                 );
             }
         }
