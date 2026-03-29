@@ -11,6 +11,7 @@ public class BarberMapper {
     public Barber toDtoRequest(BarberRequest barberRequest){
         return Barber.builder()
                 .name(barberRequest.name())
+                .active(barberRequest.active())
                 .build();
     }
 
@@ -18,7 +19,7 @@ public class BarberMapper {
         return BarberResponse.builder()
                 .id(barber.getId())
                 .name(barber.getName())
-                .active(barber.isActive())
+                .active(barber.getActive())
                 .build();
     }
 }
