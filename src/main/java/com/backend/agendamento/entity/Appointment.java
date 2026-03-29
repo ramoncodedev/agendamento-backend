@@ -26,21 +26,7 @@ import java.time.Duration;
 @Getter
 @Setter
 @Entity
-@Table(
-    name = "appointments",
-    indexes = {
-        @Index(name = "idx_appointment_barber_date", columnList = "barber_id, start_at"),
-        @Index(name = "idx_appointment_customer_date", columnList = "customer_id, start_at"),
-        @Index(name = "idx_appointment_status", columnList = "status"),
-        @Index(name = "idx_appointment_barber_status", columnList = "barber_id, status")
-    },
-    uniqueConstraints = {
-        @UniqueConstraint(
-            name = "uk_barber_appointment_time",
-            columnNames = {"barber_id", "start_at", "end_at"}
-        )
-    }
-)
+@Table(name = "appointments")
 public class Appointment {
 
     @Id
@@ -48,17 +34,17 @@ public class Appointment {
     private Long id;
 
     @NotNull(message = "Customer is required")
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(cascade = CascadeType.PERSIST, optional = false)
     @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
 
     @NotNull(message = "Barber is required")
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(cascade = CascadeType.PERSIST, optional = false)
     @JoinColumn(name = "barber_id", nullable = false)
     private Barber barber;
 
     @NotNull(message = "Service is required")
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(cascade = CascadeType.PERSIST, optional = false)
     @JoinColumn(name = "service_id", nullable = false)
     private ServiceEntity service;
 
@@ -89,41 +75,9 @@ public class Appointment {
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
-    /**
-     * Valida os horários do agendamento antes de persistir.
-     * Garante que:
-     * - Horário de fim é posterior ao de início
-     * - Não há conflito de horários
-     */
-    @PrePersist
-    @PreUpdate
-    public void validateAppointment() {
-        if (startAt != null && endAt != null) {
-            if (endAt.isBefore(startAt) || endAt.equals(startAt)) {
-                throw new IllegalArgumentException(
-                    "Appointment end time must be after start time"
-                );
-            }
 
-            // Valida se a data é futura
-            if (startAt.isBefore(LocalDateTime.now())) {
-                throw new IllegalArgumentException(
-                    "Appointment cannot be scheduled in the past"
-                );
-            }
-        }
-    }
 
-    /**
-     * Calcula a duração do agendamento em minutos.
-     * @return duração em minutos
-     */
-    public long getDurationInMinutes() {
-        if (startAt == null || endAt == null) {
-            return 0;
-        }
-        return Duration.between(startAt, endAt).toMinutes();
-    }
+
 
     /**
      * Verifica se há conflito de horários com outro agendamento.
@@ -137,7 +91,7 @@ public class Appointment {
             return false;
         }
         // Conflito se: A.startAt < B.endAt AND B.startAt < A.endAt
-        return this.startAt.isBefore(other.endAt) && 
+        return this.startAt.isBefore(other.endAt) &&
                other.startAt.isBefore(this.endAt);
     }
 
@@ -158,7 +112,7 @@ public class Appointment {
      * @return true se pode ser cancelado
      */
     public boolean canBeCanceled() {
-        return status == AppointmentStatus.SCHEDULED || 
+        return status == AppointmentStatus.SCHEDULED ||
                status == AppointmentStatus.COMPLETED;
     }
 }
