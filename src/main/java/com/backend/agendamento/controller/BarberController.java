@@ -6,6 +6,7 @@ import com.backend.agendamento.DTOs.request.BarberRequest;
 import com.backend.agendamento.DTOs.response.BarberResponse;
 import com.backend.agendamento.entity.Barber;
 import com.backend.agendamento.service.BarberService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,7 @@ public class BarberController {
     private final BarberService barberService;
 
     @PostMapping("/create")
-    public ResponseEntity<BarberResponse> createBarbe( @RequestBody BarberRequest barberRequest){
+    public ResponseEntity<BarberResponse> createBarbe( @Valid @RequestBody BarberRequest barberRequest){
         Barber barber = BarberMapper.toDtoRequest(barberRequest);
         Barber save = barberService.saveBarber(barber);
 
