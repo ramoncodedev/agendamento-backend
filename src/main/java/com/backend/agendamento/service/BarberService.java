@@ -6,6 +6,7 @@ import com.backend.agendamento.exception.NoBarbersAvailableException;
 import com.backend.agendamento.repository.BarberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -15,10 +16,12 @@ public class BarberService {
 
     private final BarberRepository barberRepository;
 
+    @Transactional
     public Barber saveBarber(Barber barber){
         return barberRepository.save(barber);
     }
 
+    @Transactional(readOnly = true)
     public List<Barber> findAll(){
         List<Barber> barbers = barberRepository.findAll();
 
@@ -29,6 +32,7 @@ public class BarberService {
         return barbers;
     }
 
+    @Transactional(readOnly = true)
     public  List<Barber> findByName(String name){
             List<Barber> findBarber = barberRepository.findByNameContainingIgnoreCase(name);
 
@@ -39,6 +43,7 @@ public class BarberService {
             return findBarber;
     }
 
+    @Transactional
     public void deleteBarber(Long id){
         Barber barber = barberRepository.findById(id)
                 .orElseThrow(()-> new NoBarbersAvailableException("There is no barber with that id."));
